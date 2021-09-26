@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="config/twitch.js"></script>
+        <script>
+
+            function generateEmbedURL(){
+               let url = window.location.href.split("settings2.html")[0] + "player.html";
+               url += "?broadcaster=" + document.getElementById("broadcaster").value;
+               url += "&type=" + document.getElementById("type").value;
+               url += "&scanlines=" + document.getElementById("scanlines").value;
+               url += "&static=" + document.getElementById("static").value;
+               url += "&vol=" + document.getElementById("volume").value;
+               url += "&displayname=" + document.getElementById("displayName").value;
+               
+               clippers = document.getElementById("clippers").value;
+               clippersArray = [...new Set(clippers.split(","))];
+               console.log(clippers.length);
+               if (clippers.length > 0) {
+                clippersArray.forEach(element => {
+                    console.log(element);
+                    url += "&from[]=" + element;
+                });
+               }
+               document.getElementById("embedUrl").innerText = url;
+               document.getElementById("copy").style.display = "block";
+               document.getElementById("embedUrl").style.display="block";
+               document.getElementById("verifyResult").innerHTML = "<img src='images/pondChicken.png' width='50' /><span class='speech-bubble'>Copy the above URL and then <a href='settings3.html'>Go to OBS/SLOBS Instructions</a></span>";
+               document.getElementById("verifyResult").style.display = "block";
+               console.log(url); 
+            }
+
+            function resetForm(){
+                document.getElementById("volume").value = 50;
+                document.getElementById("clippers").value = "";
+                document.getElementById("embedUrl").innerText = null;
+                document.getElementById("embedUrl").style.display="none";
+                document.getElementById("volumeDisplay").value = "50";
+                document.getElementById("copy").style.display="none";
+            }
+
+            function copyDivToClipboard() {
+                    var range = document.createRange();
+                    range.selectNode(document.getElementById("embedUrl"));
+                    window.getSelection().removeAllRanges(); // clear current selection
+                    window.getSelection().addRange(range); // to select text
+                    document.execCommand("copy");
+                    window.getSelection().removeAllRanges();// to deselect
+                }
+        </script>
+        <link href='https://fonts.googleapis.com/css?family=Taprom' rel='stylesheet'>
+        <link href='css/settings.css' rel='stylesheet'>
+    </head>
+    </html>
+    <body>
+        <h1><img src="images/pondChicken.png" width="50" /><span> Pond Chickens Twitch Clip Player</span></h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Instructions</a></li>
+                <li><a href="settings1.html">Twitch Settings</a></li>
+                <li><a href="settings2.html">Clip Player Settings</a></li>
+                <li><a href="settings3.html">SLOBS/OBS Setup</a></li>
+                <li><a href="credits.html">Credits</a></li>
+            </ul>
+        </nav>
+
+            <form onload="volumeDisplay.value='50'" oninput="volumeDisplay.value=parseInt(volume.value)">
+                <h2>Clip Player Settings</h2>
+                <p>
+                    <label for="type">Broadcaster:</label>
+                    <input type="text" id="broadcaster" name="broadcaster" /> 
+                    <span class="tip">Enter the name of the channel where you want to get clips from</span>
+                </p>
+                <p>
+                    <label for="type">Player Type:</label>
+                    <select id="type" name="type">
+                        <option value="random">Random Clips</option>
+                        <option value="top">Top Clips</option>
+                    </select> 
+                    <span class="tip">Choose to show either random clips or just your top rated clips</span>
+                </p>
+                <p>
+                    <label for="scanlines">Scanlines:</label>
+                    <select id="scanlines" name="scanlines">
+                        <option value="true">Enabled</option>
+                        <option value="false">Disabled</option>
+                    </select>
+                    <span class="tip">Enable this if you want old school CRT scanlines to be rendered over your clips</span>
+                </p>
+                <p>
+                    <label for="static">Static:</label>
+                    <select id="static" name="static">
+                        <option value="true">Enabled</option>
+                        <option value="false">Disabled</option>
+                    </select>
+                    <span class="tip">Enable this if you want a short 1 second of static between clips</span>
+                </p>
+                <p>
+                    <label for="static">Display Clipper Name:</label>
+                    <select id="displayName" name="displayName">
+                        <option value="false">Disabled</option>
+                        <option value="true">Enabled</option>                        
+                    </select>
+                    <span class="tip">Enable this if you want to display the name of the person who made the clip</span>
+                </p>
+                <p>
+                    <label for="volume">Volume:</label>
+                    <input type="range" id="volume" name="volume" value="50"><output id="volumeDisplay" name="volumeDisplay" for="volume">50</output>
+                    <span class="tip">Set the volume level for the player</span>
+                </p>
+                <p>
+                    <label for="clippers">Clippers (comma separated!):</label><br />
+                    <textarea id="clippers" name="clippers" rows="4" cols="50"></textarea>
+                    <span class="tip">Enter a comma separated list of twitch users to limit the random clips to only those created by these users</span>
+                </p>
+                <p>
+                    <button type="button" class="positive" onclick="generateEmbedURL()">Generate Embed URL</button>
+                    <button type="button" class="negative" onclick="resetForm()">Reset</button>
+                </p>
+                <div id="embedUrl" style="display:none;">
+
+                </div>
+                <div id="copy" style="display:none;">
+                    <button class="positive"1 type="button" onclick="copyDivToClipboard()">Copy to Clipboard</button>
+                </div>    
+                <br>
+                <div style="display:none" id="verifyResult"></div>
+            </form>
+    
+    </body>
+</html>

@@ -1,0 +1,199 @@
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+h1 {
+    font-family: 'Taprom';
+    font-size: 2.5rem;
+    margin-top:0;
+    margin-bottom:0;
+    padding-top:20px;
+    padding-bottom:20px;
+    padding-left:20px;
+    color: rgb(255, 255, 255);
+    background-color: rgb(54, 53, 53);
+}
+
+h2 {
+    font-size:1.9em;
+    font-family: 'Taprom';
+}
+
+h3 {
+    font-size:1.51em;
+    font-family: 'Taprom'; 
+}
+
+button {
+    font-size:medium;
+    padding:10px
+}
+
+button.positive {
+    background-color: rgb(216, 231, 223);
+    border: 1px solid rgb(41, 139, 85);
+    border-radius: 5px;
+    color: rgb(41, 139, 85);
+}
+
+button.positive:hover {
+    background-color: rgb(185, 214, 198);
+    border: 1px solid rgb(41, 139, 85);
+    border-radius: 5px;
+    color: rgb(41, 139, 85);  
+}
+
+button.verify {
+    background-color: rgb(236, 228, 217);
+    border: 1px solid rgb(211, 147, 28);
+    border-radius: 5px;
+    color: rgb(211, 147, 28);
+}
+
+button.verify:hover {
+    background-color: rgb(235, 223, 206);
+    border: 1px solid rgb(199, 135, 17);
+    border-radius: 5px;
+    color: rgb(199, 135, 17);
+}
+
+button.negative {
+    background-color: rgb(245, 226, 226);
+    border: 1px solid rgb(136, 39, 39);
+    border-radius: 5px;
+    color: rgb(136, 39, 39);
+}
+
+button.negative:hover {
+    background-color: rgb(236, 206, 206);
+    border: 1px solid rgb(136, 39, 39);
+    border-radius: 5px;
+    color: rgb(136, 39, 39); 
+}
+
+select, input {
+    font-size:medium;  
+    padding:4px;
+}
+
+form {
+    padding-left:20px;
+}
+
+img, span {
+    vertical-align: middle;
+}
+
+#embedUrl {
+    width:fit-content;
+    font-family: monospace;
+    font-size: large;
+    padding: 10px 10px 10px 10px;
+    margin-bottom:20px;
+    border:1px mediumseagreen dashed;
+    border-radius: 5px;
+    background-color: rgb(229, 238, 233);
+}
+
+div.code {
+    width:fit-content;
+    font-family: monospace;
+    font-size: large;
+    padding: 10px 10px 10px 10px;
+    margin-bottom:20px;
+    border:1px mediumseagreen dashed;
+    border-radius: 5px;
+    background-color: rgb(229, 238, 233);
+}
+
+.speech-bubble {
+	position: relative;
+	background: rgb(203, 230, 215);
+	border-radius: .4em;
+    padding: 10px;
+    margin-left:20px;
+}
+
+.speech-bubble:after {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 50%;
+	width: 0;
+	height: 0;
+	border: 12px solid transparent;
+	border-right-color: rgb(203, 230, 215);
+	border-left: 0;
+	border-bottom: 0;
+	margin-top: -6px;
+	margin-left: -12px;
+}
+
+.speech-bubble2 {
+	position: relative;
+	background: rgb(230, 203, 203);
+	border-radius: .4em;
+    padding: 10px;
+    margin-left:20px;
+}
+
+.speech-bubble2:after {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 50%;
+	width: 0;
+	height: 0;
+	border: 12px solid transparent;
+	border-right-color: rgb(230, 203, 203);
+	border-left: 0;
+	border-bottom: 0;
+	margin-top: -6px;
+	margin-left: -12px;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #EEEEEE;
+}
+
+nav ul li {
+    float:left;
+}
+
+nav ul li a {
+    display: block;
+    color: #000000;
+    font-weight:bold;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+
+nav ul li a:hover {
+    background-color: #ff6c2c;
+    color: white;
+}
+
+pre {
+    margin:0;
+}
+
+span.tip{
+    color: #444444;
+    display:block;
+    font-size: small;
+    font-style: italic;
+}
+
+ol li {
+    padding-bottom:5px;
+}
+
+ul.credits li {
+    padding-bottom:5px;
+}

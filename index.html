@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script>
+            function goToSettings(){
+                window.location='settings1.html';
+            }
+        </script>
+        <link href='https://fonts.googleapis.com/css?family=Taprom' rel='stylesheet'>
+        <link href='css/settings.css' rel='stylesheet'>
+    </head>
+    </html>
+    <body>
+        <h1><img src="images/pondChicken.png" width="50" /><span> Pond Chickens Twitch Clip Player</span></h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Instructions</a></li>
+                <li><a href="settings1.html">Twitch Settings</a></li>
+                <li><a href="settings2.html">Clip Player Settings</a></li>
+                <li><a href="settings3.html">SLOBS/OBS Setup</a></li>
+                <li><a href="credits.html">Credits</a></li>
+            </ul>
+        </nav>
+
+            <form>
+                <h2>Instructions</h2>
+                <p>Welcome to the Pond Chickens Twtich Clip Player! 
+                </p>
+                <p>
+                    This project is provided free, please use it however you like. 
+                    If you do find it useful, why not pop-over to my better halves Twitch channel and give her a follow, donation or sub:
+                    <a href="https://twitch.tv/fluffyedge" target="_blank">https://twitch.tv/fluffyedge</a>
+                </p>
+                <p>
+                    If you are reading this then you have hopefully downloaded and extracted 
+                    this project to a local folder on your Computer. If so, carry on reading!
+                </p>
+                <h3>Getting a Twitch Developer Client ID and Client Secret</h3>
+                <p>
+                    Before you can start using this application, you need to generate a Client ID and Client Secret from the Twitch developers site. 
+                    Here are instructions on how to do this:
+                    <ol>
+                        <li>Visit <a href="https://dev.twitch.tv/" target="_blank">https://dev.twitch.tv/</a> and Login with your twitch username and password</li>
+                        <li>Press "Your Console" in the top right.</li>
+                        <li>Under "Applications" press "Register Your Application"</li>
+                        <li>Give it any name, it doesn't matter. Select the most appropriate category, or just "Other."</li>
+                        <li>As an "OAuth redirect URL" is required, enter a link to any website - preferably one you own, or just enter a link to google (https://google.com/). <b>The app doesn't use this so it's not important.</b></li>
+                        <li>Once created, press "Manage" and scroll to the bottom of the page. <b>Take note of the "Client ID" and "Client Secret"</b> (press new secret if there isn't one there)</li>
+                    </ol>
+                </p>
+                    Once you have your Client ID and Client Secret from Twitch, you're ready to move onto the next steps...
+                </p>
+                <p>
+                    <button type="button" class="positive" onclick="goToSettings()">Lets get Started!</button>
+                </p>  
+            </form> 
+    </body>
+</html>

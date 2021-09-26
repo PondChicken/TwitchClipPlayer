@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script>
+            function goToSettings(){
+                window.location='settings1.html';
+            }
+        </script>
+        <link href='https://fonts.googleapis.com/css?family=Taprom' rel='stylesheet'>
+        <link href='css/settings.css' rel='stylesheet'>
+    </head>
+    </html>
+    <body>
+        <h1><img src="images/pondChicken.png" width="50" /><span> Pond Chickens Twitch Clip Player</span></h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Instructions</a></li>
+                <li><a href="settings1.html">Twitch Settings</a></li>
+                <li><a href="settings2.html">Clip Player Settings</a></li>
+                <li><a href="settings3.html">SLOBS/OBS Setup</a></li>
+                <li><a href="credits.html">Credits</a></li>
+            </ul>
+        </nav>
+            
+
+            <form>
+                <h2>SLOBS / OBS Setup</h2>
+                <p>Now that you have your custom URL, you need to add a browser source in you SLOBS or OBS application.
+                </p>
+                
+                <p>Please note the following <b>IMPORTANT</b> points:</p>
+                <ol>
+                    <li>Local file should be unchecked. This is needed so that the URL will support URL parameters</li>
+                    <li>Paste your URL in the URL input</li>
+                    <li>Try to ensure that the width and height are the same aspect ratio as your video. 
+                        It's best to set the values here rather than trying to resize the video with your mouse in the scene directly</li>
+                    <li>It's best to check the options <i>"Shutdown source when not visible"</i> and <i>"Refresh browser when scene becomes active"</i></li>
+                </ol>
+                <p>
+                    <img src="images/slobs_example.png" />
+                </p>  
+                <p>
+                    The screenshot above shows an example.
+                </p>
+            </form> 
+    </body>
+</html>

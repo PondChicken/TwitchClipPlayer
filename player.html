@@ -1,0 +1,229 @@
+<html>
+
+<body>
+    <script src="config/twitch.js"></script>
+    <script>
+
+        // Import the twitch settings from config/twitch.js
+        const CLIENT_ID = twitchSettings.client_id;
+        const CLIENT_SECRET = twitchSettings.client_secret;
+        let BROADCASTER_NAME = twitchSettings.broadcaster_name;
+
+        // These are default values tht will be overridden when you build the URL with the settings page.
+        // the volume level for the clip player
+        let VOLUME_PERCENT = 50;
+        // TOP_OR_RANDOM can be either "top" to prioritise top clips or "random" to get random clips out of your top 1000
+        // note that "random" clip mode requires a tiny bit of buffer time when the page is first loaded to collect a list of clips
+        let TOP_OR_RANDOM = "random";
+        // define if the clip creator should be show cased on the clip
+        let SHOW_CLIP_CREATORS = "false";
+        // should static be shown between clips
+        let STATIC = "false";
+        // should scan lines be shown over the clips
+        let SCANLINES = "false";
+        // a list of clippers we want to showcase
+        let CLIPPERS = []
+
+
+        // You can set the parameters from the URL also, for example:
+        // file:///C:/path/to/file/twitch_clips.html?type=top&from[]=fluffyedge&from[]=utje666&from[]=gwr6029
+        // &from[]=thelethalquack&from[]=mantagalaxy&from[]=beefmasta51&from[]=knipnogg&vol=50&static=true&scanlines=false
+
+        // Here are the parameters:
+        // type (random OR top):      Selects if the player will play your top view clips or a random selection
+        // vol (50):                  Set this to a value of between 0 and 100 to set the player volume
+        // static (true OR false):    If this is set to true, a short clip of static will be played between clips
+        // scanlines (true OR false): If this is set to true, scanlines will be rendered over your video for an old CRT aesthetic
+        // from[] (clipper name):     You can list multiple values as shown in the example above it will then limit the random clips to display 
+        //                            only those clipped by the listed viewers
+
+        function setParamsFromQueryString(){
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            if (!(urlParams.get('broadcaster') == null)) BROADCASTER_NAME = urlParams.get('broadcaster');
+            if (!(urlParams.getAll('from[]') == null)) CLIPPERS = urlParams.getAll('from[]');
+            if (!(urlParams.get('type') == null)) TYPE = urlParams.get('type');
+            if (!(urlParams.get('vol') == null)) VOLUME_PERCENT = urlParams.get('vol');
+            if (!(urlParams.get('static') == null)) STATIC = urlParams.get('static');
+            if (!(urlParams.get('scanlines') == null)) SCANLINES = urlParams.get('scanlines')
+            if (!(urlParams.get('displayname') == null)) SHOW_CLIP_CREATORS = urlParams.get('displayname')
+        }
+
+        setParamsFromQueryString()
+
+        // Utility functions
+        async function authenticatedFetch(url, options) {
+            options = options || {};
+            options.headers = options.headers || {}
+
+            options.headers["Client-ID"] = CLIENT_ID
+            options.headers["Authorization"] = `Bearer ${(await getTwitchCredentials()).access_token}`
+
+            return await fetch(url, options);
+        }
+
+        let OAUTH = null;
+        async function getTwitchCredentials() {
+            if (OAUTH) return OAUTH;
+
+            const response = await fetch(`https://id.twitch.tv/oauth2/token?client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&grant_type=client_credentials`, {
+                method: "POST"
+            })
+            OAUTH = await response.json();
+            return OAUTH;
+        }
+
+        let BROADCASTER_ID = null;
+        async function getBroadcasterId() {
+            if (BROADCASTER_ID) return BROADCASTER_ID;
+
+            const response = await authenticatedFetch(`https://api.twitch.tv/helix/users?login=${BROADCASTER_NAME}`)
+            BROADCASTER_ID = (await response.json()).data[0].id;
+            return BROADCASTER_ID;
+        }
+
+        let CLIPS_PAGINATION = null
+        async function getTopClips() {
+            let response = await authenticatedFetch(`https://api.twitch.tv/helix/clips?first=100&broadcaster_id=${await getBroadcasterId()}${CLIPS_PAGINATION ? `&after=${CLIPS_PAGINATION}` : ""}`);
+            let body = await response.json();
+
+            CLIPS_PAGINATION = body.pagination.cursor;
+            return body;
+        }
+        
+
+
+        async function getRandomClips(creatorArray) {
+            let clips = [];
+
+            const max = 10;11
+            let pagination = null;
+
+            for (let i = 0; i < max; i++) { // top 1000 clips
+                let response = await authenticatedFetch(`https://api.twitch.tv/helix/clips?first=100&broadcaster_id=${await getBroadcasterId()}${pagination ? `&after=${pagination}` : ""}`);
+                let body = await response.json()
+                pagination = body.pagination.cursor;
+                body.data.forEach(function (clip){
+                    if (CLIPPERS.length > 0) {
+                        if (CLIPPERS.includes(clip.creator_name.toLowerCase())) {
+                            clips.push(clip);
+                        }
+                    } else {
+                        clips.push(clip);
+                    } 
+                });
+                const status = document.getElementById("status")
+                status.innerText = "Loading Clips: " + Math.floor(((i + 1) / max) * 100) + "%"
+            }
+
+            return clips;
+        }
+
+        function getClipStreamURL(clip) {
+            let thumbPart = clip.thumbnail_url.split("-preview-");
+            return thumbPart[0] + ".mp4";
+        }
+
+        let CLIPS_TO_PLAY = []
+        let CLIP_PLAYING = null
+
+        function setupPlayer() {
+            const player = document.getElementById("player")
+
+            player.load()
+            player.loop = false;
+            player.controls = false;
+            player.volume = VOLUME_PERCENT / 100
+
+            // enable or disable the scanlines based on the input setting:
+            if (SCANLINES.toLocaleLowerCase() == "true") {
+                document.getElementById("fx").classList.add('scanlines');
+            }
+            
+
+            player.addEventListener("ended", playRandom)
+        }
+
+        async function playRandom() {
+            const player = document.getElementById("player")
+            const overlayText = document.getElementById("overlay")
+
+            if (CLIP_PLAYING) {
+                CLIPS_TO_PLAY.splice(CLIPS_TO_PLAY.indexOf(CLIP_PLAYING), 1)
+            }
+
+            if (CLIPS_TO_PLAY.length == 0) {
+                const status = document.getElementById("status")
+
+                status.className = "statusText"
+                CLIPS_TO_PLAY = TOP_OR_RANDOM == "top" ? (await getTopClips()).data : await getRandomClips()
+                status.className = "statusText hide"
+            }
+
+            if (STATIC.toLocaleLowerCase() == "true"){
+                player.pause()
+                player.src = "videos/static.mp4"
+                player.play()
+                setTimeout(
+                    
+                function(){
+                    player.pause()
+
+                    let random = Math.floor(Math.random() * Object.keys(CLIPS_TO_PLAY).length)
+                    
+                    const clip = CLIPS_TO_PLAY[Object.keys(CLIPS_TO_PLAY)[random]]
+                    // remove the current clip form the lsit to stop it being selected again.
+                    CLIPS_TO_PLAY.splice(Object.keys(CLIPS_TO_PLAY)[random],1);
+
+                    CLIP_PLAYING = clip
+
+                    player.pause()
+                    player.src = getClipStreamURL(clip)
+                    player.play()
+                    if (SHOW_CLIP_CREATORS.toLowerCase() == "true") {
+                        let date = new Date(clip.created_at)
+                        overlayText.innerText = `Clipped by ${clip.creator_name}`
+                    }
+
+                },1000);
+            } else {
+                let random = Math.floor(Math.random() * Object.keys(CLIPS_TO_PLAY).length)
+                    
+                    const clip = CLIPS_TO_PLAY[Object.keys(CLIPS_TO_PLAY)[random]]
+                    // remove the current clip form the lsit to stop it being selected again.
+                    CLIPS_TO_PLAY.splice(Object.keys(CLIPS_TO_PLAY)[random],1);
+                    
+                    CLIP_PLAYING = clip
+
+                    player.pause()
+                    player.src = getClipStreamURL(clip)
+                    player.play()
+                    if (SHOW_CLIP_CREATORS.toLowerCase() == "true") {
+                        let date = new Date(clip.created_at)
+                        overlayText.innerText = `Clipped by ${clip.creator_name}`
+                    }
+            }
+        }
+
+        function run() {
+            setupPlayer()
+            playRandom()
+        }
+
+        window.addEventListener("load", run);
+    </script>
+    <div id="fx">
+    <div class="container">
+        <video id="player" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: -1;"></video>
+        <div id="overlay" class="overlayText"></div>
+        <h1 id="status" class="statusText">Loading Clips</h1>
+    </div>
+</div>
+</body>
+
+<head>
+    <link href='https://fonts.googleapis.com/css?family=Taprom' rel='stylesheet'>
+    <link href='css/player.css' rel='stylesheet'>   
+</head>
+
+</html>

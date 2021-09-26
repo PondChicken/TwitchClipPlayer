@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script>
+            function goToSettings(){
+                window.location='settings1.html';
+            }
+        </script>
+        <link href='https://fonts.googleapis.com/css?family=Taprom' rel='stylesheet'>
+        <link href='css/settings.css' rel='stylesheet'>
+    </head>
+    </html>
+    <body>
+        <h1><img src="images/pondChicken.png" width="50" /><span> Pond Chickens Twitch Clip Player</span></h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Instructions</a></li>
+                <li><a href="settings1.html">Twitch Settings</a></li>
+                <li><a href="settings2.html">Clip Player Settings</a></li>
+                <li><a href="settings3.html">SLOBS/OBS Setup</a></li>
+                <li><a href="credits.html">Credits</a></li>
+            </ul>
+        </nav>
+            
+
+            <form>
+                <h2>Credits</h2>
+                <p>This project was built on top of some excellent work from others developers:
+                </p>
+                <p>
+                    <ul class="credits">
+                        <li><b>ShaderWave's Random Twitch Clip Player:</b>
+                            <br/><a href="https://github.com/ShaderWave/RandomClipPlayer/releases/tag/v1.1" target="_blank">https://github.com/ShaderWave/RandomClipPlayer/releases/tag/v1.1</a>
+                        </li>
+        
+                        <li><b>Mehdi's CSS only Scanlines Overlay:</b>
+                            <br /><a href="https://codepen.io/meduzen/pen/zxbwRV" target="_blank">https://codepen.io/meduzen/pen/zxbwRV</a></li>
+                    </ul>
+                <p>
+                    This project takes ShaderWave's original project and adds the following features:
+                </p>
+                <ul class="credits">
+                    <li>The ability to pass configuration parameters from the URL</li>
+                    <li>Added the scan lines overlay option</li>
+                    <li>Added between video static option</li>
+                    <li>Added the option to filter the random clips to a set of named twich users</li>
+                    <li>Created a Simple UI (that you are looking at now) to allow a user to easily configure the application without any knowledge of javascript and HTML</li>
+                </ul>
+            </form> 
+    </body>
+</html>

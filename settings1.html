@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="config/twitch.js"></script>
+        <script>
+            // Import the twitch settings from config/twitch.js
+            const CLIENT_ID = twitchSettings.client_id;
+            const CLIENT_SECRET = twitchSettings.client_secret;
+
+            function displayTwitchConfig(){
+                document.write("<div class='code'>Client ID: <b>" + twitchSettings.client_id + "</b><br />Client Secret: <b>" + twitchSettings.client_secret + "</b></div>");
+            }
+
+
+            let OAUTH = null;
+            async function getTwitchCredentials() {
+                if (OAUTH) return OAUTH;
+
+                const response = await fetch(`https://id.twitch.tv/oauth2/token?client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&grant_type=client_credentials`, {
+                    method: "POST"
+                })
+                OAUTH = await response.json();
+                return OAUTH;
+            }
+
+            async function verify(){
+                let response = await getTwitchCredentials();
+                if (response.access_token){
+                    document.getElementById("verifyResult").innerHTML = "<img src='images/pondChicken.png' width='50' /><span class='speech-bubble'>Your Twitch credentials look good! Time to move onto the <a href='settings2.html'>Clip Player Settings</a></span>";
+                    document.getElementById("verifyResult").style.display = "block";
+                } else {
+                    document.getElementById("verifyResult").innerHTML = "<img src='images/pondChicken.png' width='50' /><span class='speech-bubble2'>Error: " + response.message + ". Please edit the config file and click refresh and try again.</span>";
+                    document.getElementById("verifyResult").style.display = "block";
+                }
+            }
+        </script>
+        <link href='https://fonts.googleapis.com/css?family=Taprom' rel='stylesheet'>
+        <link href='css/settings.css' rel='stylesheet'>
+    </head>
+    </html>
+    <body>
+        <h1><img src="images/pondChicken.png" width="50" /><span> Pond Chickens Twitch Clip Player</span></h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Instructions</a></li>
+                <li><a href="settings1.html">Twitch Settings</a></li>
+                <li><a href="settings2.html">Clip Player Settings</a></li>
+                <li><a href="settings3.html">SLOBS/OBS Setup</a></li>
+                <li><a href="credits.html">Credits</a></li>
+            </ul>
+        </nav>
+            
+
+            <form onload="volumeDisplay.value='50'" oninput="volumeDisplay.value=parseInt(volume.value)">
+                <h2>Twitch Client Id and Secret</h2>
+                <p>
+                    In Order to get your clips from Twitch, this application needs you to generate a 
+                    <strong>Client ID</strong> and <strong>Client Secret</strong> on Twitch.
+                </p>
+                <p>
+                    Once you have these, you need to enter them in the file:<br/> 
+                    <script>document.write("<div class='code'>" + window.location.href.split("settings1.html")[0].split("///")[1] + "config/twitch.js</div>");</script>
+                    
+                </p>
+                <p>
+                    When you have entered the credentials in the file, it should look like this:
+                    <div class='code'>
+<pre>var twitchSettings = {
+    client_id: "312409dsfsf324sdgvca2",
+    client_secret: "gdsalfe234sd0vds4dcc3e423"
+}</pre>
+                    </div>
+                </p>
+                <p>
+                    Below is the Client ID and Client Secret that are in the file right now. If these are blank, just go and edit the file now and save it, then come back here and hit refresh:
+                    <script>displayTwitchConfig()</script>
+                    
+                </p>
+                <p>
+                    <button type="button" class="verify" onclick="verify()">Verify Twitch Credentials</button>
+                    <button type="button" class="positive" onclick="location.reload();">Refresh</button>
+                    <div style="display:none" id="verifyResult"></div>
+                </p>
+    </body>
+</html>
