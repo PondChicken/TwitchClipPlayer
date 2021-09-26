@@ -1,5 +1,5 @@
 # Pond Chicken's Twitch Clip Player
-A Simple Twitch clip player designed to be used by streamers who want to be able to emded their clips in a SLOB/OBS scene.
+A Simple Twitch clip player designed to be used by streamers who want to be able to embed their clips in a SLOB/OBS scene.
 
 It supports playing either random clips or your top clips and offers the following feature found on certain paid services:
 
